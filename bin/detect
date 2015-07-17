@@ -1,0 +1,7 @@
+#!/usr/bin/env ruby
+
+if File.exist? File.join ARGV.first, 'Gemfile'
+  exit
+else
+  abort
+end
