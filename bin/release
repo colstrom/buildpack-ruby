@@ -1,0 +1,14 @@
+#!/usr/bin/ruby
+
+require 'yaml'
+
+environment = {
+  'config_vars' => {
+    'RACK_ENV' => 'production'
+  },
+  'default_process_types' => {
+    'web' => "bundle exec rackup --port #{ENV['PORT'] || 9292}"
+  }
+}
+
+puts YAML.dump environment
