@@ -1,0 +1,30 @@
+#!/usr/bin/env ruby
+
+require 'yaml'
+
+$stdout.sync = true
+abort 'Syntax: compile <build_dir> <cache_dir>' if ARGV.length < 2
+build, cache = ARGV.first(2).each { |d| Dir.mkdir d unless Dir.exist? d }
+
+File.open "#{cache}/ansible.hosts", 'w' do |stream|
+  stream.write "[local]\n"
+  stream.write "localhost\n"
+end
+
+File.open "#{cache}/playbook-ruby.yml", 'w' do |stream|
+  stream.write YAML.dump [{
+    'connection' => 'local',
+    'hosts' => 'localhost',
+    'roles' => [{ 'role' => 'telusdigital.ruby' }]
+  }]
+end
+
+[
+  'pip install ansible',
+  "ansible-galaxy install telusdigital.ruby -p #{cache}/roles",
+  "ansible-playbook -i #{build}/ansible.hosts #{build}/playbook-ruby.yml"
+].each do |command|
+  IO.popen(command) do |stream|
+    puts stream.readline until stream.eof
+  end
+end
