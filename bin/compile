@@ -20,7 +20,7 @@ File.open "#{cache}/playbook-ruby.yml", 'w' do |stream|
 end
 
 [
-  'pip install ansible',
+  'pip install --user ansible',
   "ansible-galaxy install telusdigital.ruby -p #{cache}/roles",
   "ansible-playbook -i #{build}/ansible.hosts #{build}/playbook-ruby.yml"
 ].each do |command|
