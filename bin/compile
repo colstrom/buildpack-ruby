@@ -19,14 +19,13 @@ File.open "#{cache}/playbook-ruby.yml", 'w' do |stream|
   }]
 end
 
-path = [File.expand_path('~/.local/bin'), '/usr/bin', '/bin'].join(':')
+# path = [File.expand_path('~/.local/bin'), '/usr/bin', '/bin'].join(':')
 
 [
-  'pip install --user ansible',
   "ansible-galaxy install telusdigital.ruby -p #{cache}/roles",
   "ansible-playbook -i #{build}/ansible.hosts #{build}/playbook-ruby.yml"
 ].each do |command|
-  IO.popen([{'PATH' => path}, *command.split]) do |stream|
+  IO.popen([*command.split]) do |stream|
     puts stream.readline until stream.eof
   end
 end
